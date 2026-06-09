@@ -37,6 +37,7 @@ const initialDemoState = {
     {
       id: "emp-1",
       name: "Rohit Verma",
+      role: "Airside Operations Supervisor",
       department: "Operations",
       manager: "Marcus Jean",
       appraisalStatus: "Complete",
@@ -45,6 +46,7 @@ const initialDemoState = {
     {
       id: "emp-2",
       name: "Priya Nair",
+      role: "Security Screening Lead",
       department: "Security",
       manager: "Devon Lake",
       appraisalStatus: "In progress",
@@ -53,6 +55,7 @@ const initialDemoState = {
     {
       id: "emp-3",
       name: "Anika Singh",
+      role: "HR Coordinator",
       department: "HR",
       manager: "Anita Sharma",
       appraisalStatus: "Complete",
@@ -61,6 +64,7 @@ const initialDemoState = {
     {
       id: "emp-4",
       name: "Leah Baptiste",
+      role: "Ramp Services Coordinator",
       department: "Operations",
       manager: "Marcus Jean",
       appraisalStatus: "In progress",
@@ -69,6 +73,7 @@ const initialDemoState = {
     {
       id: "emp-5",
       name: "Maya Richardson",
+      role: "Guest Services Agent",
       department: "Customer Experience",
       manager: "Marcus Jean",
       appraisalStatus: "Not started",
@@ -77,6 +82,7 @@ const initialDemoState = {
     {
       id: "emp-6",
       name: "Caleb Brooks",
+      role: "Security Officer",
       department: "Security",
       manager: "Devon Lake",
       appraisalStatus: "Not started",
@@ -85,6 +91,7 @@ const initialDemoState = {
     {
       id: "emp-7",
       name: "Sofia Brown",
+      role: "Accounts Payable Specialist",
       department: "Finance",
       manager: "Nadia Wilson",
       appraisalStatus: "Complete",
@@ -93,6 +100,7 @@ const initialDemoState = {
     {
       id: "emp-8",
       name: "Daniel Peterson",
+      role: "Facilities Technician",
       department: "Maintenance",
       manager: "Ethan Clarke",
       appraisalStatus: "Complete",
@@ -101,6 +109,7 @@ const initialDemoState = {
     {
       id: "emp-9",
       name: "Janelle Thomas",
+      role: "Maintenance Planner",
       department: "Maintenance",
       manager: "Ethan Clarke",
       appraisalStatus: "In progress",
@@ -109,10 +118,194 @@ const initialDemoState = {
     {
       id: "emp-10",
       name: "Owen Samuel",
+      role: "Customer Care Lead",
       department: "Customer Experience",
       manager: "Nadia Wilson",
       appraisalStatus: "Complete",
       latestGrade: "5",
+    },
+  ],
+  appraisals: [
+    {
+      employeeId: "emp-1",
+      progress: 100,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "Complete" },
+        { label: "Final Assessment", status: "Complete" },
+      ],
+      goals: [
+        "Reduce average gate turnaround delays in assigned shifts.",
+        "Improve airside incident reporting completeness.",
+      ],
+      managerComment: "Strong ownership of shift coordination and follow-through.",
+      hrNotes: "Ready for cycle close.",
+      blockers: [],
+      timeline: [
+        { date: "2026-01-12", label: "Goals submitted", detail: "Manager and employee confirmed goals." },
+        { date: "2026-06-18", label: "Mid-year assessment complete", detail: "Progress reviewed by manager." },
+        { date: "2026-12-09", label: "Final grade submitted", detail: "HR review complete." },
+      ],
+    },
+    {
+      employeeId: "emp-2",
+      progress: 52,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "In progress" },
+        { label: "Final Assessment", status: "Not started" },
+      ],
+      goals: [
+        "Keep screening lane staffing aligned with peak passenger windows.",
+        "Complete quarterly refresher training for assigned officers.",
+      ],
+      managerComment: "Mid-year notes are drafted but not submitted.",
+      hrNotes: "Follow up with Devon Lake if no update by Friday.",
+      blockers: ["Manager review pending"],
+      timeline: [
+        { date: "2026-01-15", label: "Goals submitted", detail: "Security goals accepted." },
+        { date: "2026-06-21", label: "Reminder sent", detail: "Mid-year assessment reminder sent to manager." },
+      ],
+    },
+    {
+      employeeId: "emp-3",
+      progress: 100,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "Complete" },
+        { label: "Final Assessment", status: "Complete" },
+      ],
+      goals: [
+        "Improve appraisal cycle communications for managers.",
+        "Reduce missing employee record exceptions before launch.",
+      ],
+      managerComment: "Consistent, organized, and proactive throughout the cycle.",
+      hrNotes: "No exceptions.",
+      blockers: [],
+      timeline: [
+        { date: "2026-01-10", label: "Goals submitted", detail: "Goals reviewed by HR manager." },
+        { date: "2026-12-08", label: "Final grade submitted", detail: "Cycle record complete." },
+      ],
+    },
+    {
+      employeeId: "emp-4",
+      progress: 45,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "In progress" },
+        { label: "Final Assessment", status: "Not started" },
+      ],
+      goals: [
+        "Improve ramp handoff notes between arrival and departure teams.",
+        "Complete safety checklist spot checks for assigned shifts.",
+      ],
+      managerComment: "Goals are clear. Mid-year review needs manager completion.",
+      hrNotes: "Watch this record because Marcus has multiple outstanding appraisals.",
+      blockers: ["Manager review pending"],
+      timeline: [
+        { date: "2026-01-14", label: "Goals submitted", detail: "Employee goals submitted by manager." },
+        { date: "2026-06-20", label: "Employee update received", detail: "Progress notes added for mid-year review." },
+      ],
+    },
+    {
+      employeeId: "emp-5",
+      progress: 10,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Not started" },
+        { label: "Mid-Year Assessment", status: "Not started" },
+        { label: "Final Assessment", status: "Not started" },
+      ],
+      goals: [],
+      managerComment: "No appraisal record started.",
+      hrNotes: "Needs HR follow-up to open goal setting.",
+      blockers: ["Goal setting not opened"],
+      timeline: [
+        { date: "2026-01-20", label: "Reminder sent", detail: "Goal setting reminder queued for manager." },
+      ],
+    },
+    {
+      employeeId: "emp-6",
+      progress: 8,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Not started" },
+        { label: "Mid-Year Assessment", status: "Not started" },
+        { label: "Final Assessment", status: "Not started" },
+      ],
+      goals: [],
+      managerComment: "No appraisal record started.",
+      hrNotes: "Security department has overdue manager work.",
+      blockers: ["Goal setting not opened", "Manager overdue"],
+      timeline: [
+        { date: "2026-01-21", label: "Reminder sent", detail: "Overdue notice sent to manager." },
+      ],
+    },
+    {
+      employeeId: "emp-7",
+      progress: 100,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "Complete" },
+        { label: "Final Assessment", status: "Complete" },
+      ],
+      goals: ["Close monthly reconciliations within the agreed finance calendar."],
+      managerComment: "Reliable performance and strong attention to detail.",
+      hrNotes: "Ready for cycle close.",
+      blockers: [],
+      timeline: [
+        { date: "2026-01-11", label: "Goals submitted", detail: "Finance goals accepted." },
+        { date: "2026-12-07", label: "Final grade submitted", detail: "Manager submitted final score." },
+      ],
+    },
+    {
+      employeeId: "emp-8",
+      progress: 100,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "Complete" },
+        { label: "Final Assessment", status: "Complete" },
+      ],
+      goals: ["Complete preventive maintenance tickets within agreed response windows."],
+      managerComment: "Strong completion rate for priority work orders.",
+      hrNotes: "Ready for cycle close.",
+      blockers: [],
+      timeline: [
+        { date: "2026-01-13", label: "Goals submitted", detail: "Maintenance goals accepted." },
+        { date: "2026-12-06", label: "Final grade submitted", detail: "Final review completed." },
+      ],
+    },
+    {
+      employeeId: "emp-9",
+      progress: 58,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "In progress" },
+        { label: "Final Assessment", status: "Not started" },
+      ],
+      goals: ["Improve scheduling accuracy for recurring maintenance windows."],
+      managerComment: "Mid-year review is underway.",
+      hrNotes: "No HR action today.",
+      blockers: [],
+      timeline: [
+        { date: "2026-01-16", label: "Goals submitted", detail: "Manager submitted planning goals." },
+        { date: "2026-06-22", label: "Mid-year draft started", detail: "Manager opened assessment." },
+      ],
+    },
+    {
+      employeeId: "emp-10",
+      progress: 100,
+      phaseStatus: [
+        { label: "Goal Setting", status: "Complete" },
+        { label: "Mid-Year Assessment", status: "Complete" },
+        { label: "Final Assessment", status: "Complete" },
+      ],
+      goals: ["Improve passenger issue resolution time at customer care desks."],
+      managerComment: "Excellent guest recovery performance during peak periods.",
+      hrNotes: "Ready for cycle close.",
+      blockers: [],
+      timeline: [
+        { date: "2026-01-09", label: "Goals submitted", detail: "Customer care goals accepted." },
+        { date: "2026-12-05", label: "Final grade submitted", detail: "Final review completed." },
+      ],
     },
   ],
   managerProgress: [
@@ -186,6 +379,22 @@ export function getOverviewSummary(state) {
       return right.outstandingCount - left.outstandingCount
     }),
     departmentStats: state.departmentStats,
+  }
+}
+
+export function getEmployeeProfile(state, employeeId) {
+  const employee = state.employees.find((item) => item.id === employeeId)
+
+  if (!employee) return null
+
+  const appraisal = state.appraisals.find((item) => item.employeeId === employeeId) ?? null
+
+  return {
+    employee,
+    appraisal,
+    blockers: appraisal?.blockers ?? [],
+    managerProgress: state.managerProgress.find((item) => item.manager === employee.manager) ?? null,
+    timeline: appraisal?.timeline ?? [],
   }
 }
 

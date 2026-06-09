@@ -4,6 +4,7 @@ import { describe, it } from "node:test"
 import {
   createInitialDemoState,
   filterEmployees,
+  getEmployeeProfile,
   getOverviewSummary,
   sortEmployees,
   validateCycleConfig,
@@ -64,5 +65,17 @@ describe("HR Lean MVP workflow helpers", () => {
       summary.managerProgress.map((manager) => manager.riskStatus),
       ["Overdue", "Near deadline", "On track", "On track"]
     )
+  })
+
+  it("builds an employee profile with appraisal detail and manager context", () => {
+    const state = createInitialDemoState()
+    const profile = getEmployeeProfile(state, "emp-4")
+
+    assert.equal(profile.employee.name, "Leah Baptiste")
+    assert.equal(profile.employee.role, "Ramp Services Coordinator")
+    assert.equal(profile.appraisal.progress, 45)
+    assert.deepEqual(profile.blockers, ["Manager review pending"])
+    assert.equal(profile.managerProgress.manager, "Marcus Jean")
+    assert.equal(profile.timeline[0].label, "Goals submitted")
   })
 })

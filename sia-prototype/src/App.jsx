@@ -4,8 +4,10 @@ import { Badge } from "@/components/ui/badge"
 import {
   Breadcrumb,
   BreadcrumbItem,
+  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,16 +29,23 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import {
   AlertCircleIcon,
   ArrowDownIcon,
+  ArrowLeftIcon,
   ArrowUpIcon,
+  Building2Icon,
   CalendarClockIcon,
   CheckCircle2Icon,
   ClipboardCheckIcon,
+  ClipboardListIcon,
+  FileTextIcon,
+  MessageSquareTextIcon,
   SearchIcon,
+  UserRoundIcon,
   UsersRoundIcon,
 } from "lucide-react"
 import {
   createInitialDemoState,
   filterEmployees,
+  getEmployeeProfile,
   getOverviewSummary,
   sortEmployees,
   validateCycleConfig,
@@ -99,6 +108,20 @@ function SelectField({ children, label, value, onChange }) {
       >
         {children}
       </select>
+    </div>
+  )
+}
+
+function DetailItem({ icon: Icon, label, value }) {
+  return (
+    <div className="flex min-w-0 gap-3 rounded-xl border bg-background p-4">
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+        <Icon className="size-4" />
+      </div>
+      <div className="min-w-0">
+        <div className="text-sm text-muted-foreground">{label}</div>
+        <div className="mt-1 break-words font-medium">{value}</div>
+      </div>
     </div>
   )
 }
@@ -286,7 +309,7 @@ function SortButton({ columnKey, label, sort, onSort }) {
   )
 }
 
-function EmployeesPage({ employees }) {
+function EmployeesPage({ employees, onSelectEmployee }) {
   const [search, setSearch] = useState("")
   const [filters, setFilters] = useState(emptyFilters)
   const [sort, setSort] = useState({ key: "name", direction: "asc" })
@@ -372,8 +395,16 @@ function EmployeesPage({ employees }) {
               </thead>
               <tbody>
                 {visibleEmployees.map((employee) => (
-                  <tr className="border-b last:border-b-0" key={employee.id}>
-                    <td className="break-words px-4 py-3 font-medium">{employee.name}</td>
+                  <tr className="border-b transition-colors hover:bg-muted/40 last:border-b-0" key={employee.id}>
+                    <td className="break-words px-4 py-3">
+                      <button
+                        type="button"
+                        className="break-words text-left font-medium underline-offset-4 hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        onClick={() => onSelectEmployee(employee.id)}
+                      >
+                        {employee.name}
+                      </button>
+                    </td>
                     <td className="break-words px-4 py-3 text-muted-foreground">{employee.department}</td>
                     <td className="break-words px-4 py-3 text-muted-foreground">{employee.manager}</td>
                     <td className="px-4 py-3">
@@ -387,6 +418,194 @@ function EmployeesPage({ employees }) {
           </div>
         </CardContent>
       </Card>
+    </>
+  )
+}
+
+function EmployeeProfilePage({ onBack, profile }) {
+  if (!profile) {
+    return (
+      <>
+        <PageHeader
+          title="Employee not found"
+          description="Return to Employees and choose another record."
+          actions={<Button variant="outline" onClick={onBack}>Back to Employees</Button>}
+        />
+      </>
+    )
+  }
+
+  const { appraisal, blockers, employee, managerProgress, timeline } = profile
+  const goals = appraisal?.goals ?? []
+
+  return (
+    <>
+      <PageHeader
+        title={employee.name}
+        description={`${employee.role} in ${employee.department}. Managed by ${employee.manager}.`}
+        actions={(
+          <Button variant="outline" onClick={onBack}>
+            <ArrowLeftIcon />
+            Back to Employees
+          </Button>
+        )}
+      />
+
+      <section className="grid gap-6 xl:grid-cols-[.85fr_1.15fr]">
+        <div className="flex flex-col gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Employee Details</CardTitle>
+              <CardDescription>Basic record and appraisal status.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-3">
+              <DetailItem icon={UserRoundIcon} label="Role" value={employee.role} />
+              <DetailItem icon={Building2Icon} label="Department" value={employee.department} />
+              <DetailItem icon={UsersRoundIcon} label="Manager" value={employee.manager} />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border bg-background p-4">
+                  <div className="text-sm text-muted-foreground">Appraisal status</div>
+                  <Badge className="mt-2" variant={statusVariant(employee.appraisalStatus)}>
+                    {employee.appraisalStatus}
+                  </Badge>
+                </div>
+                <div className="rounded-xl border bg-background p-4">
+                  <div className="text-sm text-muted-foreground">Latest grade</div>
+                  <div className="mt-2 font-medium">{employee.latestGrade}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Current Cycle</CardTitle>
+              <CardDescription>Progress through this appraisal cycle.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <span className="text-muted-foreground">Employee progress</span>
+                  <span className="font-medium">{appraisal?.progress ?? 0}%</span>
+                </div>
+                <Progress value={appraisal?.progress ?? 0} />
+              </div>
+              <div className="grid gap-3">
+                {(appraisal?.phaseStatus ?? []).map((phase) => (
+                  <div className="flex flex-col gap-3 rounded-xl border bg-background p-4 sm:flex-row sm:items-center sm:justify-between" key={phase.label}>
+                    <div className="break-words font-medium">{phase.label}</div>
+                    <Badge variant={statusVariant(phase.status)}>{phase.status}</Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Manager Completion</CardTitle>
+              <CardDescription>Context for the employee's reporting line.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {managerProgress ? (
+                <div className="rounded-xl border bg-background p-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <div className="break-words font-medium">{managerProgress.manager}</div>
+                      <p className="text-muted-foreground">
+                        {managerProgress.completeCount} complete, {managerProgress.outstandingCount} outstanding
+                      </p>
+                    </div>
+                    <Badge variant={statusVariant(managerProgress.riskStatus)}>{managerProgress.riskStatus}</Badge>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl border bg-background p-4 text-muted-foreground">No manager context available.</div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Goals</CardTitle>
+              <CardDescription>Goals recorded for the current appraisal cycle.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {goals.length === 0 ? (
+                <div className="rounded-xl border bg-background p-4 text-muted-foreground">No goals have been submitted.</div>
+              ) : goals.map((goal) => (
+                <div className="flex min-w-0 gap-3 rounded-xl border bg-background p-4" key={goal}>
+                  <ClipboardListIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                  <div className="break-words">{goal}</div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Review Notes</CardTitle>
+              <CardDescription>Manager and HR context for follow-up.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-3 lg:grid-cols-2">
+              <div className="rounded-xl border bg-background p-4">
+                <div className="flex items-center gap-2 font-medium">
+                  <MessageSquareTextIcon className="size-4 text-muted-foreground" />
+                  Manager comments
+                </div>
+                <p className="mt-3 break-words text-muted-foreground">{appraisal?.managerComment ?? "No manager comments yet."}</p>
+              </div>
+              <div className="rounded-xl border bg-background p-4">
+                <div className="flex items-center gap-2 font-medium">
+                  <FileTextIcon className="size-4 text-muted-foreground" />
+                  HR notes
+                </div>
+                <p className="mt-3 break-words text-muted-foreground">{appraisal?.hrNotes ?? "No HR notes yet."}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Action Needed</CardTitle>
+              <CardDescription>Items blocking this employee's appraisal.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {blockers.length === 0 ? (
+                <div className="rounded-xl border bg-background p-4 text-muted-foreground">Nothing needs your attention.</div>
+              ) : blockers.map((blocker) => (
+                <div className="flex min-w-0 gap-3 rounded-xl border bg-background p-4" key={blocker}>
+                  <AlertCircleIcon className="mt-0.5 size-4 shrink-0 text-destructive" />
+                  <div className="break-words">{blocker}</div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Activity</CardTitle>
+              <CardDescription>Recent appraisal events for this employee.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {timeline.length === 0 ? (
+                <div className="rounded-xl border bg-background p-4 text-muted-foreground">No activity recorded.</div>
+              ) : timeline.map((event) => (
+                <div className="flex min-w-0 gap-3 rounded-xl border bg-background p-4" key={`${event.date}-${event.label}`}>
+                  <CalendarClockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0">
+                    <div className="break-words font-medium">{event.label}</div>
+                    <div className="mt-1 text-sm text-muted-foreground">{event.date}</div>
+                    <p className="mt-2 break-words text-muted-foreground">{event.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </>
   )
 }
@@ -583,8 +802,13 @@ function AppraisalCyclePage({ cycleConfig, setCycleConfig }) {
 export function App() {
   const [state, setState] = useState(() => createInitialDemoState())
   const [activeView, setActiveView] = useState("overview")
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null)
 
   const summary = getOverviewSummary(state)
+  const selectedEmployeeProfile = useMemo(
+    () => selectedEmployeeId ? getEmployeeProfile(state, selectedEmployeeId) : null,
+    [selectedEmployeeId, state]
+  )
 
   useEffect(() => {
     window.history.scrollRestoration = "manual"
@@ -596,7 +820,7 @@ export function App() {
     }, 0)
 
     return () => window.clearTimeout(scrollTimer)
-  }, [activeView])
+  }, [activeView, selectedEmployeeId])
 
   function completeAction(actionId) {
     setState((current) => ({
@@ -612,8 +836,20 @@ export function App() {
     }))
   }
 
+  function navigate(view) {
+    setActiveView(view)
+    setSelectedEmployeeId(null)
+  }
+
   function renderActiveView() {
-    if (activeView === "employees") return <EmployeesPage employees={state.employees} />
+    if (activeView === "employees") {
+      if (selectedEmployeeId) {
+        return <EmployeeProfilePage profile={selectedEmployeeProfile} onBack={() => setSelectedEmployeeId(null)} />
+      }
+
+      return <EmployeesPage employees={state.employees} onSelectEmployee={setSelectedEmployeeId} />
+    }
+
     if (activeView === "appraisal-cycle") {
       return <AppraisalCyclePage cycleConfig={state.cycleConfig} setCycleConfig={setCycleConfig} />
     }
@@ -623,15 +859,29 @@ export function App() {
   return (
     <TooltipProvider>
       <SidebarProvider>
-        <AppSidebar activeView={activeView} onNavigate={setActiveView} />
+        <AppSidebar activeView={activeView} onNavigate={navigate} />
         <SidebarInset className="min-w-0">
           <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/90 px-4 backdrop-blur">
             <SidebarTrigger className="-ml-1" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{viewLabels[activeView]}</BreadcrumbPage>
-                </BreadcrumbItem>
+                {selectedEmployeeProfile && activeView === "employees" ? (
+                  <>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink asChild>
+                        <button type="button" onClick={() => setSelectedEmployeeId(null)}>Employees</button>
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{selectedEmployeeProfile.employee.name}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </>
+                ) : (
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>{viewLabels[activeView]}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                )}
               </BreadcrumbList>
             </Breadcrumb>
             <div className="ml-auto flex items-center gap-2">
