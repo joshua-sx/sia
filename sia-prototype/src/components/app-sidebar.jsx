@@ -1,30 +1,23 @@
 "use client"
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
 import {
-  BellIcon,
-  ClipboardCheckIcon,
-  FileClockIcon,
-  FileTextIcon,
-  FolderKanbanIcon,
-  GoalIcon,
+  CalendarClockIcon,
   LayoutDashboardIcon,
-  LifeBuoyIcon,
-  ListChecksIcon,
-  LockKeyholeIcon,
-  Settings2Icon,
   ShieldCheckIcon,
-  SparklesIcon,
   UsersRoundIcon,
 } from "lucide-react"
 
@@ -38,115 +31,52 @@ const data = {
     {
       name: "SIA",
       logo: <ShieldCheckIcon />,
-      plan: "PJIA workspace",
-    },
-    {
-      name: "SIA Beta",
-      logo: <SparklesIcon />,
-      plan: "Design partner",
+      plan: "PJIAE workspace",
     },
   ],
   navMain: [
     {
-      title: "Dashboard",
-      url: "#",
+      id: "overview",
+      title: "Overview",
       icon: <LayoutDashboardIcon />,
-      isActive: true,
-      items: [
-        { title: "Overview", url: "#" },
-        { title: "Action needed", url: "#" },
-        { title: "Cycle health", url: "#" },
-      ],
     },
     {
-      title: "Appraisal Cycles",
-      url: "#",
-      icon: <FolderKanbanIcon />,
-      items: [
-        { title: "2026 Annual Cycle", url: "#" },
-        { title: "Templates", url: "#" },
-        { title: "Phase settings", url: "#" },
-      ],
-    },
-    {
-      title: "People",
-      url: "#",
+      id: "employees",
+      title: "Employees",
       icon: <UsersRoundIcon />,
-      items: [
-        { title: "Directory", url: "#" },
-        { title: "Reporting lines", url: "#" },
-        { title: "Imports", url: "#" },
-      ],
     },
     {
-      title: "Goals",
-      url: "#",
-      icon: <GoalIcon />,
-      items: [
-        { title: "Goal review", url: "#" },
-        { title: "Acknowledgments", url: "#" },
-        { title: "AI writing help", url: "#" },
-      ],
-    },
-    {
-      title: "Reports & Audit",
-      url: "#",
-      icon: <FileTextIcon />,
-      items: [
-        { title: "Exports", url: "#" },
-        { title: "Audit log", url: "#" },
-        { title: "Permissions", url: "#" },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: <Settings2Icon />,
-      items: [
-        { title: "Workspace", url: "#" },
-        { title: "Notifications", url: "#" },
-        { title: "Security", url: "#" },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Manager follow-ups",
-      url: "#",
-      icon: <ListChecksIcon />,
-    },
-    {
-      name: "Overdue acknowledgments",
-      url: "#",
-      icon: <BellIcon />,
-    },
-    {
-      name: "Locked records",
-      url: "#",
-      icon: <LockKeyholeIcon />,
-    },
-    {
-      name: "Audit exports",
-      url: "#",
-      icon: <FileClockIcon />,
-    },
-    {
-      name: "Help & support",
-      url: "#",
-      icon: <LifeBuoyIcon />,
+      id: "appraisal-cycle",
+      title: "Appraisal Cycle",
+      icon: <CalendarClockIcon />,
     },
   ],
 }
 
-export function AppSidebar({ ...props }) {
+export function AppSidebar({ activeView, onNavigate, ...props }) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <SidebarGroup>
+          <SidebarGroupLabel>HR</SidebarGroupLabel>
+          <SidebarMenu>
+            {data.navMain.map((item) => (
+              <SidebarMenuItem key={item.id}>
+                <SidebarMenuButton
+                  isActive={activeView === item.id}
+                  tooltip={item.title}
+                  onClick={() => onNavigate(item.id)}
+                >
+                  {item.icon}
+                  <span>{item.title}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
