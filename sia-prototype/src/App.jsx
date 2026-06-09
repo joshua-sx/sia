@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
-import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
@@ -628,7 +627,6 @@ export function App() {
         <SidebarInset className="min-w-0">
           <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/90 px-4 backdrop-blur">
             <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 data-vertical:h-4" />
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
