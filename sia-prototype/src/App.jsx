@@ -84,7 +84,7 @@ function PageHeader({ actions, description, title }) {
     <section className="flex min-w-0 flex-col gap-3 py-4 md:py-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
-          <h1 className="text-balance font-heading text-3xl font-medium md:text-4xl">{title}</h1>
+          <h1 className="text-balance font-heading text-3xl font-normal md:text-4xl">{title}</h1>
           {description ? <p className="mt-2 max-w-3xl text-muted-foreground">{description}</p> : null}
         </div>
         {actions ? <div className="flex shrink-0 flex-wrap gap-2">{actions}</div> : null}
@@ -150,8 +150,8 @@ function CycleStatus({ cycle }) {
           {cycle.phases.map((phase) => (
             <div
               className={cx(
-                "min-w-0 rounded-xl border bg-background p-4",
-                phase.label === cycle.currentPhase && "ring-2 ring-ring"
+                "min-w-0 rounded-lg border bg-background p-4",
+                phase.label === cycle.currentPhase && "border-primary bg-primary/5"
               )}
               key={phase.id}
             >
@@ -863,7 +863,7 @@ export function App() {
       <SidebarProvider>
         <AppSidebar activeView={activeView} onNavigate={navigate} />
         <SidebarInset className="min-w-0">
-          <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/90 px-4 backdrop-blur">
+          <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background/90 px-4 backdrop-blur">
             <SidebarTrigger className="-ml-1" />
             <Breadcrumb>
               <BreadcrumbList>
