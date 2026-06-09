@@ -1,327 +1,245 @@
-const cycle = {
-  id: "cycle-2026",
-  name: "2026 Annual Appraisal Cycle",
-  organization: "PJIA",
-  phase: "Goal setting",
-  phaseDates: {
-    setup: "Feb 1",
-    goalSetting: "Feb 28",
-    goalLock: "Mar 7",
-    midYearReview: "Aug 15",
-    finalAppraisal: "Dec 10",
-  },
-  completion: 62,
+const riskOrder = {
+  Overdue: 0,
+  "Near deadline": 1,
+  "On track": 2,
 }
 
-const people = [
-  {
-    id: "person-1",
-    name: "Rohit Verma",
-    role: "Terminal Operations Lead",
-    department: "Operations",
-    managerId: "person-4",
-    appraiserId: "person-4",
-    acknowledgmentStatus: "acknowledged",
-    importStatus: "verified",
-  },
-  {
-    id: "person-2",
-    name: "Priya Nair",
-    role: "Security Supervisor",
-    department: "Security",
-    managerId: "person-6",
-    appraiserId: "person-6",
-    acknowledgmentStatus: "pending",
-    importStatus: "verified",
-  },
-  {
-    id: "person-3",
-    name: "Anika Singh",
-    role: "HR Coordinator",
-    department: "HR",
-    managerId: "person-7",
-    appraiserId: "person-7",
-    acknowledgmentStatus: "pending",
-    importStatus: "verified",
-  },
-  {
-    id: "person-4",
-    name: "Marcus Jean",
-    role: "Operations Manager",
-    department: "Operations",
-    managerId: "person-7",
-    appraiserId: "person-7",
-    acknowledgmentStatus: "acknowledged",
-    importStatus: "verified",
-  },
-  {
-    id: "person-5",
-    name: "Leah Baptiste",
-    role: "Customer Experience Officer",
-    department: "Customer Experience",
-    managerId: "person-4",
-    appraiserId: null,
-    acknowledgmentStatus: "pending",
-    importStatus: "needs_appraiser",
-  },
-  {
-    id: "person-6",
-    name: "Devon Lake",
-    role: "Security Manager",
-    department: "Security",
-    managerId: "person-7",
-    appraiserId: "person-7",
-    acknowledgmentStatus: "pending",
-    importStatus: "manager_overdue",
-  },
-  {
-    id: "person-7",
-    name: "Anita Sharma",
-    role: "HR Officer",
-    department: "People Ops",
-    managerId: null,
-    appraiserId: null,
-    acknowledgmentStatus: "acknowledged",
-    importStatus: "verified",
-  },
-]
-
-const goals = [
-  {
-    id: "goal-1",
-    employeeId: "person-1",
-    managerId: "person-4",
-    title: "Improve terminal operations handover",
-    description: "Reduce missed shift handover items by using a shared checklist before each supervisor change.",
-    status: "flagged",
-    flags: ["Missing numeric target", "Needs deadline"],
-    aiSuggestion: "Reduce missed shift handover items by 30% by May 31 using a shared checklist before each supervisor change.",
-  },
-  {
-    id: "goal-2",
-    employeeId: "person-2",
-    managerId: "person-6",
-    title: "Strengthen access-control checks",
-    description: "Improve patrol consistency and report exceptions quickly.",
-    status: "flagged",
-    flags: ["Vague outcome"],
-    aiSuggestion: "Complete weekly access-control spot checks and report 100% of exceptions within one business day.",
-  },
-  {
-    id: "goal-3",
-    employeeId: "person-5",
-    managerId: "person-4",
-    title: "Speed up passenger issue resolution",
-    description: "Close service desk tickets faster during peak check-in windows.",
-    status: "flagged",
-    flags: ["Needs measurable service level", "Appraiser missing"],
-    aiSuggestion: "Resolve 85% of passenger service desk tickets within 20 minutes during peak check-in windows by Q3.",
-  },
-  {
-    id: "goal-4",
-    employeeId: "person-3",
-    managerId: "person-7",
-    title: "Complete appraisal file cleanup",
-    description: "Reconcile employee appraisal records before the lock date.",
-    status: "submitted",
-    flags: [],
-    aiSuggestion: "Reconcile 100% of employee appraisal records by Mar 5 and document unresolved exceptions for HR review.",
-  },
-  {
-    id: "goal-5",
-    employeeId: "person-6",
-    managerId: "person-7",
-    title: "Improve security team coaching cadence",
-    description: "Hold monthly coaching conversations with all shift supervisors.",
-    status: "flagged",
-    flags: ["Needs evidence source"],
-    aiSuggestion: "Hold monthly coaching conversations with all shift supervisors and log agreed actions in SIA within 48 hours.",
-  },
-]
-
-const auditEvents = [
-  {
-    id: "audit-1",
-    actor: "Anita Sharma",
-    action: "Cycle opened",
-    target: cycle.name,
-    timestamp: "Feb 1, 09:00",
-    detail: "Goal setting opened for managers and employees.",
-  },
-  {
-    id: "audit-2",
-    actor: "System",
-    action: "Import verified",
-    target: "People directory",
-    timestamp: "Feb 2, 11:20",
-    detail: "7 people loaded. 1 missing appraiser requires HR review.",
-  },
-  {
-    id: "audit-3",
-    actor: "Priya Nair",
-    action: "AI draft edited",
-    target: "Strengthen access-control checks",
-    timestamp: "Feb 6, 14:45",
-    detail: "Manager accepted AI wording changes before submission.",
-  },
-]
-
-const reminders = [
-  {
-    id: "reminder-1",
-    targetId: "person-6",
-    targetType: "manager",
-    sentAt: "Feb 8, 10:15",
-    detail: "Reminder sent for overdue team goal review.",
-  },
-]
-
-const exports = [
-  {
-    id: "export-1",
-    name: "Cycle readiness CSV",
-    status: "Ready",
-    updatedAt: "Feb 8, 16:00",
-  },
-  {
-    id: "export-2",
-    name: "Employee acknowledgment PDF pack",
-    status: "Available after HR closure",
-    updatedAt: "Pending",
-  },
-]
+const gradeOrder = {
+  "5": 5,
+  "4": 4,
+  "3": 3,
+  "2": 2,
+  "1": 1,
+  Pending: 0,
+}
 
 const initialDemoState = {
-  cycle,
-  people,
-  goals,
-  auditEvents,
-  reminders,
-  exports,
+  cycleConfig: {
+    name: "2026 Annual Appraisal Cycle",
+    organization: "PJIAE",
+    currentPhase: "Goal Setting",
+    currentWindow: "Jan 1-31, 2026",
+    progress: 62,
+    assessmentsPerYear: 2,
+    gradingScale: "1-5",
+    passThreshold: "3",
+    assessmentWeights: {
+      midYear: 40,
+      final: 60,
+    },
+    phases: [
+      { id: "goalSetting", label: "Goal Setting", startDate: "2026-01-01", endDate: "2026-01-31" },
+      { id: "midYear", label: "Mid-Year Assessment", startDate: "2026-06-01", endDate: "2026-06-30" },
+      { id: "final", label: "Final Assessment", startDate: "2026-12-01", endDate: "2026-12-12" },
+    ],
+  },
+  employees: [
+    {
+      id: "emp-1",
+      name: "Rohit Verma",
+      department: "Operations",
+      manager: "Marcus Jean",
+      appraisalStatus: "Complete",
+      latestGrade: "4",
+    },
+    {
+      id: "emp-2",
+      name: "Priya Nair",
+      department: "Security",
+      manager: "Devon Lake",
+      appraisalStatus: "In progress",
+      latestGrade: "Pending",
+    },
+    {
+      id: "emp-3",
+      name: "Anika Singh",
+      department: "HR",
+      manager: "Anita Sharma",
+      appraisalStatus: "Complete",
+      latestGrade: "5",
+    },
+    {
+      id: "emp-4",
+      name: "Leah Baptiste",
+      department: "Operations",
+      manager: "Marcus Jean",
+      appraisalStatus: "In progress",
+      latestGrade: "Pending",
+    },
+    {
+      id: "emp-5",
+      name: "Maya Richardson",
+      department: "Customer Experience",
+      manager: "Marcus Jean",
+      appraisalStatus: "Not started",
+      latestGrade: "Pending",
+    },
+    {
+      id: "emp-6",
+      name: "Caleb Brooks",
+      department: "Security",
+      manager: "Devon Lake",
+      appraisalStatus: "Not started",
+      latestGrade: "Pending",
+    },
+    {
+      id: "emp-7",
+      name: "Sofia Brown",
+      department: "Finance",
+      manager: "Nadia Wilson",
+      appraisalStatus: "Complete",
+      latestGrade: "3",
+    },
+    {
+      id: "emp-8",
+      name: "Daniel Peterson",
+      department: "Maintenance",
+      manager: "Ethan Clarke",
+      appraisalStatus: "Complete",
+      latestGrade: "4",
+    },
+    {
+      id: "emp-9",
+      name: "Janelle Thomas",
+      department: "Maintenance",
+      manager: "Ethan Clarke",
+      appraisalStatus: "In progress",
+      latestGrade: "Pending",
+    },
+    {
+      id: "emp-10",
+      name: "Owen Samuel",
+      department: "Customer Experience",
+      manager: "Nadia Wilson",
+      appraisalStatus: "Complete",
+      latestGrade: "5",
+    },
+  ],
+  managerProgress: [
+    { manager: "Devon Lake", completeCount: 0, outstandingCount: 2, riskStatus: "Overdue" },
+    { manager: "Marcus Jean", completeCount: 1, outstandingCount: 2, riskStatus: "Near deadline" },
+    { manager: "Nadia Wilson", completeCount: 2, outstandingCount: 0, riskStatus: "On track" },
+    { manager: "Ethan Clarke", completeCount: 1, outstandingCount: 1, riskStatus: "On track" },
+  ],
+  actionItems: [
+    {
+      id: "action-1",
+      title: "Open goal setting for remaining employees",
+      detail: "2 employees have not started their appraisal.",
+      actionLabel: "Open",
+      status: "Due today",
+    },
+    {
+      id: "action-2",
+      title: "Approve appraisal cycle dates",
+      detail: "The final assessment window is ready for HR review.",
+      actionLabel: "Approve",
+      status: "This week",
+    },
+  ],
+  departmentStats: [
+    { department: "Operations", completionRate: 34, grades: { "5": 0, "4": 1, "3": 0, "2": 0, "1": 0 } },
+    { department: "Security", completionRate: 0, grades: { "5": 0, "4": 0, "3": 0, "2": 0, "1": 0 } },
+    { department: "Customer Experience", completionRate: 50, grades: { "5": 1, "4": 0, "3": 0, "2": 0, "1": 0 } },
+    { department: "Maintenance", completionRate: 50, grades: { "5": 0, "4": 1, "3": 0, "2": 0, "1": 0 } },
+  ],
 }
 
 function clone(value) {
   return structuredClone(value)
 }
 
-function createAuditEvent(action, target, detail, actor = "Anita Sharma") {
-  return {
-    id: `audit-${Date.now()}`,
-    actor,
-    action,
-    target,
-    timestamp: "Just now",
-    detail,
-  }
+function normalize(value) {
+  return String(value ?? "").trim().toLowerCase()
 }
 
-function updateGoal(state, goalId, updater) {
-  return {
-    ...state,
-    goals: state.goals.map((goal) => {
-      if (goal.id !== goalId) return goal
-      return updater(goal)
-    }),
-  }
+function compareValues(left, right, direction) {
+  const directionMultiplier = direction === "desc" ? -1 : 1
+  const leftValue = left ?? ""
+  const rightValue = right ?? ""
+
+  if (leftValue < rightValue) return -1 * directionMultiplier
+  if (leftValue > rightValue) return 1 * directionMultiplier
+  return 0
+}
+
+function gradeValue(grade) {
+  return gradeOrder[grade] ?? 0
 }
 
 export function createInitialDemoState() {
   return clone(initialDemoState)
 }
 
-export function getDemoSummary(state) {
-  const flaggedGoals = state.goals.filter((goal) => goal.flags.length > 0 && goal.status !== "approved").length
-  const approvedGoals = state.goals.filter((goal) => goal.status === "approved").length
-  const pendingAcknowledgments = state.people.filter((person) => person.acknowledgmentStatus !== "acknowledged").length
-  const missingAppraisers = state.people.filter((person) => person.importStatus === "needs_appraiser").length
-  const overdueManagers = state.people.filter((person) => person.importStatus === "manager_overdue").length
+export function getOverviewSummary(state) {
+  const completeEmployees = state.employees.filter((employee) => employee.appraisalStatus === "Complete").length
+  const outstandingEmployees = state.employees.length - completeEmployees
 
   return {
-    flaggedGoals,
-    approvedGoals,
-    pendingAcknowledgments,
-    missingAppraisers,
-    overdueManagers,
-    remindersSent: state.reminders.length,
-    completion: Math.min(100, state.cycle.completion + approvedGoals * 4),
-    acknowledgmentRate: Math.round(((state.people.length - pendingAcknowledgments) / state.people.length) * 100),
+    cycle: state.cycleConfig,
+    completeEmployees,
+    outstandingEmployees,
+    actionItems: state.actionItems,
+    managerProgress: [...state.managerProgress].sort((left, right) => {
+      const riskComparison = riskOrder[left.riskStatus] - riskOrder[right.riskStatus]
+      if (riskComparison !== 0) return riskComparison
+      return right.outstandingCount - left.outstandingCount
+    }),
+    departmentStats: state.departmentStats,
   }
 }
 
-export function approveGoal(state, goalId) {
-  const goal = state.goals.find((item) => item.id === goalId)
-  if (!goal) return state
+export function filterEmployees(employees, filters, search = "") {
+  const searchValue = normalize(search)
 
-  const next = updateGoal(state, goalId, (item) => ({
-    ...item,
-    status: "approved",
-    flags: [],
-    revisionReason: "",
-  }))
+  return employees.filter((employee) => {
+    const matchesSearch = !searchValue || normalize(employee.name).includes(searchValue)
+    const matchesDepartment = !filters.department || employee.department === filters.department
+    const matchesManager = !filters.manager || employee.manager === filters.manager
+    const matchesGrade = !filters.grade || employee.latestGrade === filters.grade
+    const matchesStatus = !filters.status || employee.appraisalStatus === filters.status
 
-  return {
-    ...next,
-    auditEvents: [
-      createAuditEvent("Goal approved", goal.title, "HR approved the goal for lock readiness."),
-      ...state.auditEvents,
-    ],
-  }
+    return matchesSearch && matchesDepartment && matchesManager && matchesGrade && matchesStatus
+  })
 }
 
-export function requestGoalRevision(state, goalId, reason) {
-  const goal = state.goals.find((item) => item.id === goalId)
-  if (!goal) return state
+export function sortEmployees(employees, sort) {
+  return [...employees].sort((left, right) => {
+    if (sort.key === "latestGrade") {
+      const gradeComparison = (gradeValue(left.latestGrade) - gradeValue(right.latestGrade)) * (sort.direction === "desc" ? -1 : 1)
+      if (gradeComparison !== 0) return gradeComparison
+      return compareValues(left.name, right.name, "asc")
+    }
 
-  const next = updateGoal(state, goalId, (item) => ({
-    ...item,
-    status: "revision_requested",
-    revisionReason: reason,
-  }))
-
-  return {
-    ...next,
-    auditEvents: [
-      createAuditEvent("Revision requested", goal.title, reason),
-      ...state.auditEvents,
-    ],
-  }
+    const comparison = compareValues(left[sort.key], right[sort.key], sort.direction)
+    if (comparison !== 0) return comparison
+    return compareValues(left.name, right.name, "asc")
+  })
 }
 
-export function sendReminder(state, targetId, targetType) {
-  const target = state.people.find((person) => person.id === targetId)
-  const label = target?.name ?? targetId
-  const reminder = {
-    id: `reminder-${state.reminders.length + 1}`,
-    targetId,
-    targetType,
-    sentAt: "Just now",
-    detail: `Reminder sent for ${targetType}.`,
+export function validateCycleConfig(config) {
+  const errors = []
+  const totalWeight = Object.values(config.assessmentWeights).reduce((sum, value) => sum + Number(value || 0), 0)
+
+  if (totalWeight !== 100) {
+    errors.push("Assessment weights must total 100%.")
   }
 
-  return {
-    ...state,
-    reminders: [reminder, ...state.reminders],
-    auditEvents: [
-      createAuditEvent("Reminder sent", label, `A ${targetType} reminder was sent.`),
-      ...state.auditEvents,
-    ],
+  for (const phase of config.phases) {
+    if (phase.startDate && phase.endDate && phase.endDate < phase.startDate) {
+      errors.push(`${phase.label} cannot end before it starts.`)
+    }
   }
-}
 
-export function markAcknowledged(state, personId) {
-  const person = state.people.find((item) => item.id === personId)
-  if (!person) return state
+  const orderedPhases = [...config.phases].sort((left, right) => left.startDate.localeCompare(right.startDate))
+  for (let index = 0; index < orderedPhases.length - 1; index += 1) {
+    const current = orderedPhases[index]
+    const next = orderedPhases[index + 1]
 
-  return {
-    ...state,
-    people: state.people.map((item) => (
-      item.id === personId
-        ? { ...item, acknowledgmentStatus: "acknowledged" }
-        : item
-    )),
-    auditEvents: [
-      createAuditEvent("Acknowledgment marked", person.name, "Employee acknowledgment was marked complete."),
-      ...state.auditEvents,
-    ],
+    if (current.endDate >= next.startDate) {
+      errors.push(`${current.label} cannot overlap ${next.label}.`)
+    }
   }
+
+  return errors
 }
