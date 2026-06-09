@@ -104,7 +104,7 @@ function SelectField({ children, label, value, onChange }) {
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-9 min-w-0 rounded-lg border border-input bg-background px-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="h-9 min-w-0 rounded-lg border border-input bg-background px-3 text-sm outline-none transition-[border-color,box-shadow] duration-150 ease-out focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         {children}
       </select>
@@ -135,14 +135,14 @@ function CycleStatus({ cycle }) {
           {cycle.currentPhase} runs {cycle.currentWindow}.
         </CardDescription>
         <CardAction>
-          <Badge>{cycle.progress}% complete</Badge>
+          <Badge className="tabular-nums">{cycle.progress}% complete</Badge>
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-4 text-sm">
             <span className="text-muted-foreground">Overall progress</span>
-            <span className="font-medium">{cycle.progress}%</span>
+            <span className="font-medium tabular-nums">{cycle.progress}%</span>
           </div>
           <Progress value={cycle.progress} />
         </div>
@@ -222,7 +222,8 @@ function ManagerCompletion({ managers }) {
                 <div className="min-w-0">
                   <div className="break-words font-medium">{manager.manager}</div>
                   <p className="text-muted-foreground">
-                    {manager.completeCount} complete, {manager.outstandingCount} outstanding
+                    <span className="tabular-nums">{manager.completeCount}</span> complete,{" "}
+                    <span className="tabular-nums">{manager.outstandingCount}</span> outstanding
                   </p>
                 </div>
                 <Badge variant={statusVariant(manager.riskStatus)}>{manager.riskStatus}</Badge>
@@ -230,7 +231,7 @@ function ManagerCompletion({ managers }) {
               <div className="mt-4 flex flex-col gap-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Completion</span>
-                  <span className="font-medium">{completePercent}%</span>
+                  <span className="font-medium tabular-nums">{completePercent}%</span>
                 </div>
                 <Progress value={completePercent} />
               </div>
@@ -255,14 +256,14 @@ function DepartmentStats({ stats }) {
             <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
               <div className="min-w-0">
                 <div className="break-words font-medium">{department.department}</div>
-                <p className="text-muted-foreground">{department.completionRate}% complete</p>
+                <p className="text-muted-foreground"><span className="tabular-nums">{department.completionRate}%</span> complete</p>
               </div>
               <Badge variant="secondary">Grades</Badge>
             </div>
             <div className="mt-4 grid grid-cols-5 gap-2 text-center text-sm">
               {Object.entries(department.grades).map(([grade, count]) => (
                 <div className="rounded-lg bg-muted p-2" key={grade}>
-                  <div className="font-medium">{count}</div>
+                  <div className="font-medium tabular-nums">{count}</div>
                   <div className="text-muted-foreground">Grade {grade}</div>
                 </div>
               ))}
@@ -298,7 +299,7 @@ function SortButton({ columnKey, label, sort, onSort }) {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-1 text-left font-medium"
+      className="-mx-2 inline-flex min-h-9 items-center gap-1 rounded-md px-2 text-left font-medium transition-[background-color,color,scale] duration-150 ease-out hover:bg-background active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       onClick={() => onSort({ key: columnKey, direction: nextDirection })}
     >
       <span>{label}</span>
@@ -395,11 +396,11 @@ function EmployeesPage({ employees, onSelectEmployee }) {
               </thead>
               <tbody>
                 {visibleEmployees.map((employee) => (
-                  <tr className="border-b transition-colors hover:bg-muted/40 last:border-b-0" key={employee.id}>
+                  <tr className="border-b transition-colors duration-150 ease-out hover:bg-muted/40 last:border-b-0" key={employee.id}>
                     <td className="break-words px-4 py-3">
                       <button
                         type="button"
-                        className="break-words text-left font-medium underline-offset-4 hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="-mx-2 inline-flex min-h-9 items-center rounded-md px-2 text-left font-medium underline-offset-4 transition-[background-color,color,scale] duration-150 ease-out hover:bg-muted hover:underline active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         onClick={() => onSelectEmployee(employee.id)}
                       >
                         {employee.name}
@@ -410,7 +411,7 @@ function EmployeesPage({ employees, onSelectEmployee }) {
                     <td className="px-4 py-3">
                       <Badge variant={statusVariant(employee.appraisalStatus)}>{employee.appraisalStatus}</Badge>
                     </td>
-                    <td className="break-words px-4 py-3 text-muted-foreground">{employee.latestGrade}</td>
+                    <td className="break-words px-4 py-3 text-muted-foreground tabular-nums">{employee.latestGrade}</td>
                   </tr>
                 ))}
               </tbody>
@@ -471,7 +472,7 @@ function EmployeeProfilePage({ onBack, profile }) {
                 </div>
                 <div className="rounded-xl border bg-background p-4">
                   <div className="text-sm text-muted-foreground">Latest grade</div>
-                  <div className="mt-2 font-medium">{employee.latestGrade}</div>
+                  <div className="mt-2 font-medium tabular-nums">{employee.latestGrade}</div>
                 </div>
               </div>
             </CardContent>
@@ -486,7 +487,7 @@ function EmployeeProfilePage({ onBack, profile }) {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-4 text-sm">
                   <span className="text-muted-foreground">Employee progress</span>
-                  <span className="font-medium">{appraisal?.progress ?? 0}%</span>
+                  <span className="font-medium tabular-nums">{appraisal?.progress ?? 0}%</span>
                 </div>
                 <Progress value={appraisal?.progress ?? 0} />
               </div>
@@ -513,7 +514,8 @@ function EmployeeProfilePage({ onBack, profile }) {
                     <div className="min-w-0">
                       <div className="break-words font-medium">{managerProgress.manager}</div>
                       <p className="text-muted-foreground">
-                        {managerProgress.completeCount} complete, {managerProgress.outstandingCount} outstanding
+                        <span className="tabular-nums">{managerProgress.completeCount}</span> complete,{" "}
+                        <span className="tabular-nums">{managerProgress.outstandingCount}</span> outstanding
                       </p>
                     </div>
                     <Badge variant={statusVariant(managerProgress.riskStatus)}>{managerProgress.riskStatus}</Badge>
@@ -597,7 +599,7 @@ function EmployeeProfilePage({ onBack, profile }) {
                   <CalendarClockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                   <div className="min-w-0">
                     <div className="break-words font-medium">{event.label}</div>
-                    <div className="mt-1 text-sm text-muted-foreground">{event.date}</div>
+                    <div className="mt-1 text-sm text-muted-foreground tabular-nums">{event.date}</div>
                     <p className="mt-2 break-words text-muted-foreground">{event.detail}</p>
                   </div>
                 </div>
@@ -769,7 +771,7 @@ function AppraisalCyclePage({ cycleConfig, setCycleConfig }) {
                 onChange={(value) => updateWeight("final", value)}
               />
               <div className="rounded-xl bg-muted p-4 text-sm">
-                Total: <span className="font-medium">{cycleConfig.assessmentWeights.midYear + cycleConfig.assessmentWeights.final}%</span>
+                Total: <span className="font-medium tabular-nums">{cycleConfig.assessmentWeights.midYear + cycleConfig.assessmentWeights.final}%</span>
               </div>
             </CardContent>
           </Card>
