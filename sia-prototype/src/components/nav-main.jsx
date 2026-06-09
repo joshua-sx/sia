@@ -16,7 +16,9 @@ import {
 import { ChevronRightIcon } from "lucide-react"
 
 export function NavMain({
-  items
+  activeView,
+  items,
+  onNavigate,
 }) {
   return (
     <SidebarGroup>
@@ -26,11 +28,15 @@ export function NavMain({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={item.isActive || item.items?.some((subItem) => subItem.id === activeView)}
             className="group/collapsible">
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={item.id === activeView}
+                  onClick={() => onNavigate(item.id)}
+                >
                   {item.icon}
                   <span>{item.title}</span>
                   <ChevronRightIcon
@@ -42,9 +48,9 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                        <button type="button" onClick={() => onNavigate(subItem.id)}>
                           <span>{subItem.title}</span>
-                        </a>
+                        </button>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

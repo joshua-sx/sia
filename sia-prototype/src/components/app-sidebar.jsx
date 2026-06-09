@@ -48,105 +48,105 @@ const data = {
   ],
   navMain: [
     {
+      id: "dashboard",
       title: "Dashboard",
-      url: "#",
       icon: <LayoutDashboardIcon />,
       isActive: true,
       items: [
-        { title: "Overview", url: "#" },
-        { title: "Action needed", url: "#" },
-        { title: "Cycle health", url: "#" },
+        { id: "dashboard", title: "Overview" },
+        { id: "goals", title: "Action needed" },
+        { id: "cycle", title: "Cycle health" },
       ],
     },
     {
+      id: "cycle",
       title: "Appraisal Cycles",
-      url: "#",
       icon: <FolderKanbanIcon />,
       items: [
-        { title: "2026 Annual Cycle", url: "#" },
-        { title: "Templates", url: "#" },
-        { title: "Phase settings", url: "#" },
+        { id: "cycle", title: "2026 Annual Cycle" },
+        { id: "cycle", title: "Templates" },
+        { id: "settings", title: "Phase settings" },
       ],
     },
     {
+      id: "people",
       title: "People",
-      url: "#",
       icon: <UsersRoundIcon />,
       items: [
-        { title: "Directory", url: "#" },
-        { title: "Reporting lines", url: "#" },
-        { title: "Imports", url: "#" },
+        { id: "people", title: "Directory" },
+        { id: "people", title: "Reporting lines" },
+        { id: "people", title: "Imports" },
       ],
     },
     {
+      id: "goals",
       title: "Goals",
-      url: "#",
       icon: <GoalIcon />,
       items: [
-        { title: "Goal review", url: "#" },
-        { title: "Acknowledgments", url: "#" },
-        { title: "AI writing help", url: "#" },
+        { id: "goals", title: "Goal review" },
+        { id: "people", title: "Acknowledgments" },
+        { id: "goals", title: "AI writing help" },
       ],
     },
     {
+      id: "reports",
       title: "Reports & Audit",
-      url: "#",
       icon: <FileTextIcon />,
       items: [
-        { title: "Exports", url: "#" },
-        { title: "Audit log", url: "#" },
-        { title: "Permissions", url: "#" },
+        { id: "reports", title: "Exports" },
+        { id: "reports", title: "Audit log" },
+        { id: "settings", title: "Permissions" },
       ],
     },
     {
+      id: "settings",
       title: "Settings",
-      url: "#",
       icon: <Settings2Icon />,
       items: [
-        { title: "Workspace", url: "#" },
-        { title: "Notifications", url: "#" },
-        { title: "Security", url: "#" },
+        { id: "settings", title: "Workspace" },
+        { id: "settings", title: "Notifications" },
+        { id: "settings", title: "Security" },
       ],
     },
   ],
   projects: [
     {
+      id: "goals",
       name: "Manager follow-ups",
-      url: "#",
       icon: <ListChecksIcon />,
     },
     {
+      id: "people",
       name: "Overdue acknowledgments",
-      url: "#",
       icon: <BellIcon />,
     },
     {
+      id: "reports",
       name: "Locked records",
-      url: "#",
       icon: <LockKeyholeIcon />,
     },
     {
+      id: "reports",
       name: "Audit exports",
-      url: "#",
       icon: <FileClockIcon />,
     },
     {
+      id: "settings",
       name: "Help & support",
-      url: "#",
       icon: <LifeBuoyIcon />,
     },
   ],
 }
 
-export function AppSidebar({ ...props }) {
+export function AppSidebar({ activeView, onNavigate, ...props }) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain activeView={activeView} items={data.navMain} onNavigate={onNavigate} />
+        <NavProjects activeView={activeView} onNavigate={onNavigate} projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

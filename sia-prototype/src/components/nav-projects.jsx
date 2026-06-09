@@ -19,7 +19,9 @@ import {
 import { MoreHorizontalIcon, FolderIcon, ArrowRightIcon, Trash2Icon } from "lucide-react"
 
 export function NavProjects({
-  projects
+  activeView,
+  onNavigate,
+  projects,
 }) {
   const { isMobile } = useSidebar()
 
@@ -29,11 +31,12 @@ export function NavProjects({
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
-                {item.icon}
-                <span>{item.name}</span>
-              </a>
+            <SidebarMenuButton
+              isActive={item.id === activeView}
+              onClick={() => onNavigate(item.id)}
+            >
+              {item.icon}
+              <span>{item.name}</span>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -46,7 +49,7 @@ export function NavProjects({
                 className="w-fit"
                 side={isMobile ? "bottom" : "right"}
                 align={isMobile ? "end" : "start"}>
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => onNavigate(item.id)}>
                   <FolderIcon />
                   <span>Open view</span>
                 </DropdownMenuItem>
@@ -64,7 +67,7 @@ export function NavProjects({
           </SidebarMenuItem>
         ))}
         <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
+          <SidebarMenuButton className="text-sidebar-foreground/70" onClick={() => onNavigate("reports")}>
             <MoreHorizontalIcon className="text-sidebar-foreground/70" />
             <span>More</span>
           </SidebarMenuButton>
